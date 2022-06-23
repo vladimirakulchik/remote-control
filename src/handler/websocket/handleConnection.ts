@@ -1,22 +1,24 @@
-import { WebSocket } from 'ws';
+import { createWebSocketStream, WebSocket } from 'ws';
+import { parseCommand } from '../../parser/parseCommand';
 import { handleCommand } from '../handleCommand';
 
 export const handleConnection = async (socket: WebSocket): Promise<void> => {
-    // createWebSocketStream
-    // decodeStrings: false
+    const wsStream = createWebSocketStream(
+        socket, 
+        {
+            encoding: 'utf8',
+            decodeStrings: false
+        }
+    );
 
-    socket.on('message', async (data: string) => {
-        // parse command
+    wsStream.on('data', async (data: string): Promise<void> => {
+        const command = parseCommand(data);
+        const result = await handleCommand(command);
 
-        // handle command
-        const result = await handleCommand(data);
-
-
-        // log result
-
-        // send result
-        // ws.send('mouse_position 10,10' + '\0');
-        socket.send(data + '\0');
+        const message: string = result 
+            ? `${command.name} ${result}\0`
+            : `${command.name}\0`;
+        wsStream.write(message);
     });
 
     socket.on('close', () => {

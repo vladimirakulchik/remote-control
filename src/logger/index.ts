@@ -1,0 +1,1 @@
+export { logCommand } from './logCommand';

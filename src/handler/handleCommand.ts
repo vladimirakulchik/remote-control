@@ -1,13 +1,16 @@
-// should receive Command interface
+import { Command } from '../DTO/Command';
+import { logCommand } from '../logger/index';
 
-export const handleCommand = async (message: string) => {
-    // log received command. create loggers
-    console.log('received: %s', message);
+export const handleCommand = async (command: Command): Promise<string> => {
+    logCommand(command);
 
     // validate command, create array
 
     // switch action
     // perform action
 
-    // return result
+    // log result
+    console.log('result: ');
+
+    return '';
 };
