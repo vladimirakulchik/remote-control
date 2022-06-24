@@ -1,4 +1,7 @@
 import { 
+    drawSquare
+} from '../action/drawing';
+import { 
     getMousePosition, 
     moveMouseDown, 
     moveMouseLeft, 
@@ -36,6 +39,9 @@ export const handleCommand = async (command: Command): Promise<string> => {
         case 'mouse_right':
             point = await moveMouseRight(command.args);
             logCommandResult(`${point.x} ${point.y}`);
+            break;
+        case 'draw_square':
+            await drawSquare(command.args);
             break;
         default:
             throw new BadRequestError('Unsupported command.');

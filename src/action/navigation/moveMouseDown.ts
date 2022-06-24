@@ -12,7 +12,7 @@ export const moveMouseDown = async (args: number[]): Promise<Point> => {
     const currentPoint: Point = getMousePos();
     const newPoint: Point = {
         x: currentPoint.x, 
-        y: currentPoint.y + offset
+        y: currentPoint.y + offset,
     };
 
     moveMouse(newPoint.x, newPoint.y);
