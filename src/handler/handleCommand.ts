@@ -1,6 +1,8 @@
 import { 
     getMousePosition, 
     moveMouseDown, 
+    moveMouseLeft, 
+    moveMouseRight, 
     moveMouseUp 
 } from '../action/navigation/index';
 import { Command } from '../DTO/Command';
@@ -27,10 +29,14 @@ export const handleCommand = async (command: Command): Promise<string> => {
             point = await moveMouseDown(command.args);
             logCommandResult(`${point.x} ${point.y}`);
             break;
-        // case 'mouse_left':
-        //     break;
-        // case 'mouse_right':
-        //     break;
+        case 'mouse_left':
+            point = await moveMouseLeft(command.args);
+            logCommandResult(`${point.x} ${point.y}`);
+            break;
+        case 'mouse_right':
+            point = await moveMouseRight(command.args);
+            logCommandResult(`${point.x} ${point.y}`);
+            break;
         default:
             throw new BadRequestError('Unsupported command.');
     }
