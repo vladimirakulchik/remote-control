@@ -1,4 +1,8 @@
-import { getMousePosition, moveMouseUp } from '../action/navigation/index';
+import { 
+    getMousePosition, 
+    moveMouseDown, 
+    moveMouseUp 
+} from '../action/navigation/index';
 import { Command } from '../DTO/Command';
 import { Point } from '../DTO/Point';
 import { BadRequestError } from '../error/BadRequestError';
@@ -19,8 +23,10 @@ export const handleCommand = async (command: Command): Promise<string> => {
             point = await moveMouseUp(command.args);
             logCommandResult(`${point.x} ${point.y}`);
             break;
-        // case 'mouse_down':
-        //     break;
+        case 'mouse_down':
+            point = await moveMouseDown(command.args);
+            logCommandResult(`${point.x} ${point.y}`);
+            break;
         // case 'mouse_left':
         //     break;
         // case 'mouse_right':

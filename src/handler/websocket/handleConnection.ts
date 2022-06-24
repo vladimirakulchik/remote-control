@@ -18,12 +18,13 @@ export const handleConnection = async (socket: WebSocket): Promise<void> => {
             const result = await handleCommand(command);
 
             const message: string = result 
-                ? `${command.name} ${result}\0`
-                : `${command.name}\0`;
+                ? `${command.name} ${result}  \0`
+                : `${command.name}  \0`;
             wsStream.write(message);
         } catch (error) {
             if (error instanceof BadRequestError) {
                 console.error(error.message);
+                return;
             }
 
             console.error('Unexpected error.');
