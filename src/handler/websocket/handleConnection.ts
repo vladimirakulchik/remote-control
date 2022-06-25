@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import { createWebSocketStream, WebSocket } from 'ws';
 import { BadRequestError } from '../../error/BadRequestError';
 import { parseCommand } from '../../parser/parseCommand';
@@ -15,9 +16,12 @@ export const handleConnection = async (socket: WebSocket): Promise<void> => {
     wsStream.on('data', async (data: string): Promise<void> => {
         try {
             const command = parseCommand(data);
-            const result = await handleCommand(command);
 
-            const message: string = result 
+            const commandStream: Readable = Readable.from([command]);
+            const resultStream: Readable = await handleCommand(commandStream);
+            const result: string = resultStream.read();
+
+            const message: string = result
                 ? `${command.name} ${result}  \0`
                 : `${command.name}  \0`;
             wsStream.write(message);
@@ -27,7 +31,7 @@ export const handleConnection = async (socket: WebSocket): Promise<void> => {
                 return;
             }
 
-            console.error('Unexpected error.');
+            console.error('Unexpected error.', error);
         }
     });
 

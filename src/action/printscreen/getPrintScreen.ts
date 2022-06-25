@@ -1,10 +1,11 @@
 import Jimp from 'jimp';
 import { Bitmap, getMousePos, screen as robot } from 'robotjs';
+import { Readable } from 'stream';
 import { Point } from '../../DTO/Point';
 
 const WIDTH: number = 200;
 
-export const getPrintScreen = async (): Promise<string> => {
+export const getPrintScreen = async (): Promise<Readable> => {
     const centre: Point = getMousePos();
     const startPoint: Point = {
         x: centre.x - WIDTH / 2,
@@ -14,8 +15,9 @@ export const getPrintScreen = async (): Promise<string> => {
     const picture: Bitmap = robot.capture(startPoint.x, startPoint.y, WIDTH, WIDTH);
     const image: Jimp = createImageFromBitmap(picture);
     const base64: string = await image.getBase64Async(Jimp.MIME_PNG);
+    const result: string = removeMimeType(base64);
 
-    return removeMimeType(base64);
+    return Readable.from([result]);
 }
 
 const createImageFromBitmap = (picture: Bitmap): Jimp => {
@@ -27,7 +29,7 @@ const createImageFromBitmap = (picture: Bitmap): Jimp => {
         const blue: number = this.bitmap.data[idx + 2];
         const red: number = this.bitmap.data[idx + 0];
 
-        // Swap blue and red values.
+        // Swap "blue" and "red" values.
         this.bitmap.data[idx + 0] = blue;
         this.bitmap.data[idx + 2] = red;
     });

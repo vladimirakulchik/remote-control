@@ -1,15 +1,18 @@
 import { getMousePos } from 'robotjs';
+import { Readable } from 'stream';
 import { Point } from '../../DTO/Point';
 import { BadRequestError } from '../../error/BadRequestError';
 import { drawByPoints } from './drawByPoints';
 
-export const drawRectangle = async (args: number[]): Promise<void> => {
+export const drawRectangle = async (argsStream: Readable): Promise<void> => {
+    const args: number[] = argsStream.read();
+
     if (2 !== args.length) {
         throw new BadRequestError('Invalid arguments.');
     }
 
     const points: Point[] = getPoints(args[1], args[0]);
-    await drawByPoints(points);
+    await drawByPoints(Readable.from([points]));
 };
 
 const getPoints = (length: number, width: number): Point[] => {

@@ -1,8 +1,11 @@
 import { getMousePos, moveMouse } from 'robotjs';
+import { Readable } from 'stream';
 import { Point } from '../../DTO/Point';
 import { BadRequestError } from '../../error/BadRequestError';
 
-export const moveMouseUp = async (args: number[]): Promise<Point> => {
+export const moveMouseUp = async (argsStream: Readable): Promise<Readable> => {
+    const args: number[] = argsStream.read();
+
     if (1 !== args.length) {
         throw new BadRequestError('Invalid arguments.');
     }
@@ -17,5 +20,5 @@ export const moveMouseUp = async (args: number[]): Promise<Point> => {
 
     moveMouse(newPoint.x, newPoint.y);
 
-    return newPoint;
+    return Readable.from([newPoint]);
 };

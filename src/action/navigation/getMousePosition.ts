@@ -1,6 +1,6 @@
 import { getMousePos } from 'robotjs';
-import { Point } from '../../DTO/Point';
+import { Readable } from 'stream';
 
-export const getMousePosition = async (): Promise<Point> => {
-    return getMousePos();
+export const getMousePosition = async (): Promise<Readable> => {
+    return Readable.from([getMousePos()]);
 };

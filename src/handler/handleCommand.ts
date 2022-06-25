@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import { 
     drawCircle,
     drawRectangle,
@@ -16,52 +17,55 @@ import { Point } from '../DTO/Point';
 import { BadRequestError } from '../error/BadRequestError';
 import { logCommand, logCommandResult } from '../logger/index';
 
-export const handleCommand = async (command: Command): Promise<string> => {
+export const handleCommand = async (commandStream: Readable): Promise<Readable> => {
+    const command: Command = commandStream.read();
     logCommand(command);
-    let result = '';
+
     let point: Point;
+    let result: string = '';
+    const argsStream: Readable = Readable.from([command.args]);
 
     switch (command.name) {
         case 'mouse_position':
-            point = await getMousePosition();
+            point = (await getMousePosition()).read();
             result = `${point.x},${point.y}`;
             logCommandResult(result);
             break;
         case 'mouse_up':
-            point = await moveMouseUp(command.args);
+            point = (await moveMouseUp(argsStream)).read();
             logCommandResult(`${point.x} ${point.y}`);
             break;
         case 'mouse_down':
-            point = await moveMouseDown(command.args);
+            point = (await moveMouseDown(argsStream)).read();
             logCommandResult(`${point.x} ${point.y}`);
             break;
         case 'mouse_left':
-            point = await moveMouseLeft(command.args);
+            point = (await moveMouseLeft(argsStream)).read();
             logCommandResult(`${point.x} ${point.y}`);
             break;
         case 'mouse_right':
-            point = await moveMouseRight(command.args);
+            point = (await moveMouseRight(argsStream)).read();
             logCommandResult(`${point.x} ${point.y}`);
             break;
         case 'draw_square':
-            await drawSquare(command.args);
+            await drawSquare(argsStream);
             logCommandResult('success');
             break;
         case 'draw_rectangle':
-            await drawRectangle(command.args);
+            await drawRectangle(argsStream);
             logCommandResult('success');
             break;
         case 'draw_circle':
-            await drawCircle(command.args);
+            await drawCircle(argsStream);
             logCommandResult('success');
             break;
         case 'prnt_scrn':
-            result = await getPrintScreen();
+            result = (await getPrintScreen()).read();
             logCommandResult('success');
             break;
         default:
             throw new BadRequestError('Unsupported command.');
     }
 
-    return result;
+    return Readable.from([result]);
 };
