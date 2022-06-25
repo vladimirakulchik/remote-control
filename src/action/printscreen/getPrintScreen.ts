@@ -12,32 +12,28 @@ export const getPrintScreen = async (): Promise<string> => {
     };
 
     const picture: Bitmap = robot.capture(startPoint.x, startPoint.y, WIDTH, WIDTH);
-    const image: Jimp = createImageFomBitmap(picture);
+    const image: Jimp = createImageFromBitmap(picture);
     const base64: string = await image.getBase64Async(Jimp.MIME_PNG);
 
     return removeMimeType(base64);
 }
 
-const createImageFomBitmap = (picture: Bitmap): Jimp => {
+const createImageFromBitmap = (picture: Bitmap): Jimp => {
     const image: Jimp = new Jimp(picture.width, picture.height);
     image.bitmap.data = picture.image;
 
-    // Change BGRA to RGBA. Swap blue and red values.
+    // Change BGRA to RGBA in the image.
     image.scan(0, 0, image.bitmap.width, image.bitmap.height, function(x, y, idx) {
-        let blue = this.bitmap.data[idx + 2];
-        let red = this.bitmap.data[idx + 0];
+        const blue: number = this.bitmap.data[idx + 2];
+        const red: number = this.bitmap.data[idx + 0];
 
-        let tmp = red;
-        red = blue;
-        blue = tmp;
-
-        this.bitmap.data[idx + 0] = red;
-        this.bitmap.data[idx + 2] = blue;
+        // Swap blue and red values.
+        this.bitmap.data[idx + 0] = blue;
+        this.bitmap.data[idx + 2] = red;
     });
 
     return image;
 };
-
 
 const removeMimeType = (base64: string): string => {
     const parts: string[] = base64.split('data:image/png;base64,');
