@@ -24,7 +24,7 @@ export const drawRectangle = async (args: number[]): Promise<void> => {
     mouseToggle('up');
 };
 
-const getVertexes = (length:number, width: number): Point[] => {
+const getVertexes = (length: number, width: number): Point[] => {
     const pointA: Point = getMousePos();
     const pointB: Point = {
         x: pointA.x + length,

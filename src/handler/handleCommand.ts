@@ -1,4 +1,5 @@
 import { 
+    drawCircle,
     drawRectangle,
     drawSquare
 } from '../action/drawing';
@@ -46,6 +47,9 @@ export const handleCommand = async (command: Command): Promise<string> => {
             break;
         case 'draw_rectangle':
             await drawRectangle(command.args);
+            break;
+        case 'draw_circle':
+            await drawCircle(command.args);
             break;
         default:
             throw new BadRequestError('Unsupported command.');
