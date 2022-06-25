@@ -10,6 +10,7 @@ import {
     moveMouseRight, 
     moveMouseUp 
 } from '../action/navigation/index';
+import { getPrintScreen } from '../action/printscreen/getPrintScreen';
 import { Command } from '../DTO/Command';
 import { Point } from '../DTO/Point';
 import { BadRequestError } from '../error/BadRequestError';
@@ -52,6 +53,10 @@ export const handleCommand = async (command: Command): Promise<string> => {
             break;
         case 'draw_circle':
             await drawCircle(command.args);
+            logCommandResult('success');
+            break;
+        case 'prnt_scrn':
+            result = await getPrintScreen();
             logCommandResult('success');
             break;
         default:
