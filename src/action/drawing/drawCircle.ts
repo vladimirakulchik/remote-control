@@ -1,10 +1,7 @@
-import { 
-    dragMouse,
-    getMousePos,
-    mouseToggle
-} from 'robotjs';
+import { getMousePos } from 'robotjs';
 import { Point } from '../../DTO/Point';
 import { BadRequestError } from '../../error/BadRequestError';
+import { drawByPoints } from './drawByPoints';
 
 export const drawCircle = async (args: number[]): Promise<void> => {
     if (1 !== args.length) {
@@ -12,12 +9,7 @@ export const drawCircle = async (args: number[]): Promise<void> => {
     }
 
     const points: Point[] = getPoints(args[0]);
-
-    mouseToggle('down');
-    points.forEach((point: Point) => {
-        dragMouse(point.x, point.y);
-    });
-    mouseToggle('up');
+    await drawByPoints(points, false);
 };
 
 const getPoints = (radius: number): Point[] => {

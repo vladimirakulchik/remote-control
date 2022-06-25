@@ -44,12 +44,15 @@ export const handleCommand = async (command: Command): Promise<string> => {
             break;
         case 'draw_square':
             await drawSquare(command.args);
+            logCommandResult('success');
             break;
         case 'draw_rectangle':
             await drawRectangle(command.args);
+            logCommandResult('success');
             break;
         case 'draw_circle':
             await drawCircle(command.args);
+            logCommandResult('success');
             break;
         default:
             throw new BadRequestError('Unsupported command.');

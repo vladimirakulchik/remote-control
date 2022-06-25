@@ -1,30 +1,18 @@
-import { 
-    dragMouse,
-    getMousePos,
-    mouseToggle,
-    setMouseDelay
-} from 'robotjs';
+import { getMousePos } from 'robotjs';
 import { Point } from '../../DTO/Point';
 import { BadRequestError } from '../../error/BadRequestError';
-
-const MOUSE_DELAY: number = 200;
+import { drawByPoints } from './drawByPoints';
 
 export const drawRectangle = async (args: number[]): Promise<void> => {
     if (2 !== args.length) {
         throw new BadRequestError('Invalid arguments.');
     }
 
-    const points: Point[] = getVertexes(args[1], args[0]);
-
-    setMouseDelay(MOUSE_DELAY);
-    mouseToggle('down');
-    points.forEach((point: Point) => {
-        dragMouse(point.x, point.y);
-    });
-    mouseToggle('up');
+    const points: Point[] = getPoints(args[1], args[0]);
+    await drawByPoints(points);
 };
 
-const getVertexes = (length: number, width: number): Point[] => {
+const getPoints = (length: number, width: number): Point[] => {
     const pointA: Point = getMousePos();
     const pointB: Point = {
         x: pointA.x + length,
