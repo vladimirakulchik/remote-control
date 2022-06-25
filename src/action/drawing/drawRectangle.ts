@@ -9,12 +9,12 @@ import { BadRequestError } from '../../error/BadRequestError';
 
 const MOUSE_DELAY: number = 200;
 
-export const drawSquare = async (args: number[]): Promise<void> => {
-    if (1 !== args.length) {
+export const drawRectangle = async (args: number[]): Promise<void> => {
+    if (2 !== args.length) {
         throw new BadRequestError('Invalid arguments.');
     }
 
-    const points: Point[] = getVertexes(args[0]);
+    const points: Point[] = getVertexes(args[1], args[0]);
 
     setMouseDelay(MOUSE_DELAY);
     mouseToggle('down');
@@ -24,10 +24,10 @@ export const drawSquare = async (args: number[]): Promise<void> => {
     mouseToggle('up');
 };
 
-const getVertexes = (width: number): Point[] => {
+const getVertexes = (length:number, width: number): Point[] => {
     const pointA: Point = getMousePos();
     const pointB: Point = {
-        x: pointA.x + width,
+        x: pointA.x + length,
         y: pointA.y,
     };
     const pointC: Point = {
@@ -35,7 +35,7 @@ const getVertexes = (width: number): Point[] => {
         y: pointB.y + width,
     };
     const pointD: Point = {
-        x: pointC.x - width,
+        x: pointC.x - length,
         y: pointC.y,
     };
 
